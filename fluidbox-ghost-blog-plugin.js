@@ -14,16 +14,28 @@ window.fluidboxGhost = $.when(
 
   console.log('window.fluidboxGhostConfig', window.fluidboxGhostConfig);
     // Comment out lines depending on what you want to have flexbox triggered on
-    let targetImages = [
+    let targetImages = window.fluidboxGhostConfig.matchImageSelectors || [
       '.kg-gallery-image img', // Gallery Images
       '.kg-card img', // All Inline Images
       // 'p > img', // All images added via markdown
     ];
 
-    let useBackgroundBackdrop = window.fluidboxGhostConfig.useBackgroundBackdrop;
-    let showCaption = window.fluidboxGhostConfig.showCaption;
+    let backgroundColor;
+    let theme = window.fluidboxGhostConfig.theme || 'dark'; // dark, light, image, hsla(0, 0%, 15%, 0.85)
+    if(theme === 'image-backdrop'){
+      backgroundColor = '#212121';
+    }else if(theme === 'light'){
+      backgroundColor = 'hsla(0, 0%, 100%, .85);'
+    }else if(theme === 'dark'){
+      backgroundColor = 'hsla(0, 0%, 15%, 0.85)'
+    }else{
+      backgroundColor = theme;
+    }
+    console.log('theme', theme, backgroundColor);
 
-    console.log('useBackgroundBackdrop', useBackgroundBackdrop);
+    $('.fluidbox__wrap .fluidbox__overlay').css('background-color', backgroundColor + ' !important');
+
+    let showCaption = window.fluidboxGhostConfig.showCaption;
 
     let activeImage = null;
     // Appends a cpation to the page
@@ -43,7 +55,7 @@ window.fluidboxGhost = $.when(
       loader: true,
       immediateOpen: true,
     }).on('openstart.fluidbox', function() {
-      if(useBackgroundBackdrop){
+      if(theme === 'image-backdrop'){
         var $img = $(this).find('img');
         let imgSrc = $img.attr('src');
         let newRule = 'background-image: url("' + imgSrc + '") !important;';
@@ -51,13 +63,6 @@ window.fluidboxGhost = $.when(
       }
     }).on('openend.fluidbox', function() {
       activeImage = this;
-
-      if(useBackgroundBackdrop){
-        var $img = $(this).find('img');
-        let imgSrc = $img.attr('src');
-        let newRule = 'background-image: url("' + imgSrc + '") !important;';
-        document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
-      }
 
       if(showCaption){
         let caption = $(this).parents('figure').find('figcaption').html()
