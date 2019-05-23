@@ -1,6 +1,9 @@
+
+$('head').append( $('<link rel="stylesheet" type="text/css" />').attr('href', 'https://cdnjs.cloudflare.com/ajax/libs/fluidbox/2.0.5/css/fluidbox.min.css') );
+
 $.when(
-    $.getScript( "/mypath/myscript1.js" ),
-    $.getScript( "/mypath/myscript2.js" ),
+    $.getScript( "//cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js" ),
+    $.getScript( "https://cdnjs.cloudflare.com/ajax/libs/fluidbox/2.0.5/js/jquery.fluidbox.min.js" ),
     $.getScript( "/mypath/myscript3.js" ),
     $.Deferred(function( deferred ){
         $( deferred.resolve );
@@ -9,5 +12,99 @@ $.when(
 
   console.log('everything is loaded')
 
+  // Comment out lines depending on what you want to have flexbox triggered on
+  let targetImages = [
+    '.kg-gallery-image img', // Gallery Images
+    '.kg-card img', // All Inline Images
+    // 'p > img', // All images added via markdown
+  ];
+
+  let useBackgroundBackdrop = false;
+  let showCaption = false;
+
+
+  let activeImage = null;
+  // Appends a cpation to the page
+  var $caption = $('<div />', { 'id': 'caption-overlay' });
+  $caption
+    .html('<div class="img-caption"></div>')
+    .appendTo($('body'));
+
+  // Finds all of our
+  $(targetImages.join(',')).each(function (index, el) {
+    $("<a href='" + $(this).attr('src') + "' class='zoom'></a>").insertAfter($(this));
+    $(this).appendTo($(this).next("a"));
+  });
+
+  // Initialize Fluidbox
+  $(".zoom:not(.fluidbox--opened)").fluidbox({
+    loader: true,
+    immediateOpen: true,
+  }).on('openstart.fluidbox', function() {
+    if(useBackgroundBackdrop){
+      var $img = $(this).find('img');
+      let imgSrc = $img.attr('src');
+      let newRule = 'background-image: url("' + imgSrc + '") !important;';
+      document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
+    }
+  }).on('openend.fluidbox', function() {
+    activeImage = this;
+
+    if(useBackgroundBackdrop){
+      var $img = $(this).find('img');
+      let imgSrc = $img.attr('src');
+      let newRule = 'background-image: url("' + imgSrc + '") !important;';
+      document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
+    }
+
+    if(showCaption){
+      let caption = $(this).parents('figure').find('figcaption').html()
+      if(caption && caption.length > 0){
+        $('#caption-overlay')
+          .addClass('visible')
+          .find('.img-caption').text(caption)
+      }
+    }
+  })
+    .on('closestart.fluidbox', function() {
+      activeImage = null;
+      $('#caption-overlay').removeClass('visible');
+    });
+
+
+
+  var scrollPosition = 0;
+  $(window).scroll($.throttle(250, function(){
+    var currentScrollPosition = $(window).scrollTop();
+
+    // If has scrolled beyond plus/minus 60 pixels
+    if (Math.abs(currentScrollPosition - scrollPosition) > 60)
+      $('a').fluidbox('close');
+
+    // Update global scroll position store
+    scrollPosition = currentScrollPosition;
+  }));
+
+  setTimeout(()=> {
+    let allImages = $('.zoom');
+
+    window.addEventListener('keydown', function(event) {
+
+      if(!activeImage){ return; }
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      event.stopPropagation();
+      const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+
+      let currentImageIndex = allImages.index(activeImage);
+
+      if(key === 'ArrowRight' || key === 'ArrowDown'){
+        currentImageIndex++;
+      }else if(key === 'ArrowLeft' || key === 'ArrowUp'){
+        currentImageIndex--;
+      }
+      $(allImages[currentImageIndex]).trigger('click');
+    });
+  }, 500);
 
 });
