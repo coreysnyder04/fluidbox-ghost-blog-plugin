@@ -1,0 +1,172 @@
+<!-- Global site tag (gtag.js) - Google Analytics  -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-27130063-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'UA-27130063-1');
+</script>
+
+<style>
+    .gist {
+        width: 100%;
+    }
+    .fluidbox__wrap .fluidbox__overlay{
+        /*background-color: hsla(0, 0%, 100%, .85); !* Light Theme See-Through *!*/
+        background-color: hsla(0, 0%, 15%, 0.85); /* Dark Theme See-Through */
+        /*background-color: #e0e0e0; !* Light Theme *!*/
+        /*background-color: #212121; !* Dark Theme *!*/
+    }
+    #caption-overlay {
+        position: fixed;
+        bottom: 2.5%;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        padding: 1rem 0;
+        background-color: hsla(0, 0%, 100%, .85);
+        z-index: 1011;
+        text-align: center;
+        -webkit-transition: all .25s ease-in-out;
+        transition: all .25s ease-in-out;
+        -webkit-transform: translateY(100%);
+        transform: translateY(100%);
+    }
+    #caption-overlay .img-caption{ color: #1d1d1d; }
+    #caption-overlay.visible {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    .fluidbox__overlay::before{
+        /*background-image: url('http://i.imgur.com/3qj1wfN.jpg');*/
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        opacity: .33333;
+        -webkit-filter: blur(4px);
+        filter: blur(8px);
+        -webkit-transition: all .5s ease-in-out;
+        transition: all .5s ease-in-out;
+    }
+</style>
+
+
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/fluidbox/2.0.5/js/jquery.fluidbox.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fluidbox/2.0.5/css/fluidbox.min.css">
+
+<script>
+
+
+
+  // Comment out lines depending on what you want to have flexbox triggered on
+  let targetImages = [
+    '.kg-gallery-image img', // Gallery Images
+    '.kg-card img', // All Inline Images
+    // 'p > img', // All images added via markdown
+  ];
+
+  let useBackgroundBackdrop = false;
+  let showCaption = false;
+
+
+  let activeImage = null;
+  // Appends a cpation to the page
+  var $caption = $('<div />', { 'id': 'caption-overlay' });
+  $caption
+    .html('<div class="img-caption"></div>')
+    .appendTo($('body'));
+
+  // Finds all of our
+  $(targetImages.join(',')).each(function (index, el) {
+    $("<a href='" + $(this).attr('src') + "' class='zoom'></a>").insertAfter($(this));
+    $(this).appendTo($(this).next("a"));
+  });
+
+  // Initialize Fluidbox
+  $(".zoom:not(.fluidbox--opened)").fluidbox({
+    loader: true,
+    immediateOpen: true,
+  }).on('openstart.fluidbox', function() {
+    if(useBackgroundBackdrop){
+      var $img = $(this).find('img');
+      let imgSrc = $img.attr('src');
+      let newRule = 'background-image: url("' + imgSrc + '") !important;';
+      document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
+    }
+  }).on('openend.fluidbox', function() {
+    activeImage = this;
+
+    if(useBackgroundBackdrop){
+      var $img = $(this).find('img');
+      let imgSrc = $img.attr('src');
+      let newRule = 'background-image: url("' + imgSrc + '") !important;';
+      document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
+    }
+
+    if(showCaption){
+      let caption = $(this).parents('figure').find('figcaption').html()
+      if(caption && caption.length > 0){
+        $('#caption-overlay')
+          .addClass('visible')
+          .find('.img-caption').text(caption)
+      }
+    }
+  })
+    .on('closestart.fluidbox', function() {
+      activeImage = null;
+      $('#caption-overlay').removeClass('visible');
+    });
+
+
+
+  var scrollPosition = 0;
+  $(window).scroll($.throttle(250, function(){
+    var currentScrollPosition = $(window).scrollTop();
+
+    // If has scrolled beyond plus/minus 60 pixels
+    if (Math.abs(currentScrollPosition - scrollPosition) > 60)
+      $('a').fluidbox('close');
+
+    // Update global scroll position store
+    scrollPosition = currentScrollPosition;
+  }));
+
+  setTimeout(()=> {
+    let allImages = $('.zoom');
+
+    window.addEventListener('keydown', function(event) {
+
+      if(!activeImage){ return; }
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      event.stopPropagation();
+      const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+
+      let currentImageIndex = allImages.index(activeImage);
+
+      if(key === 'ArrowRight' || key === 'ArrowDown'){
+        currentImageIndex++;
+      }else if(key === 'ArrowLeft' || key === 'ArrowUp'){
+        currentImageIndex--;
+      }
+      $(allImages[currentImageIndex]).trigger('click');
+    });
+  }, 500);
+
+</script>
