@@ -54,7 +54,6 @@ window.fluidboxGhost = $.when(
         var $img = $(this).find('img');
         let imgSrc = $img.attr('src');
         let newRule = 'background-image: url("' + imgSrc + '") !important;';
-        // document.styleSheets[0].addRule('.fluidbox__overlay::before',newRule);
         document.styleSheets[0].insertRule(".fluidbox__overlay::before{"+ newRule + "}", document.styleSheets[0].cssRules.length);
       }
     }).on('openend.fluidbox', function() {
