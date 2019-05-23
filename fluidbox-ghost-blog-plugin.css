@@ -1,8 +1,8 @@
 .fluidbox__wrap .fluidbox__overlay{
+    background-color: #212121; /* Dark Theme */
     /*background-color: hsla(0, 0%, 100%, .85); !* Light Theme See-Through *!*/
     /*background-color: hsla(0, 0%, 15%, 0.85); !* Dark Theme See-Through *!*/
     /*background-color: #e0e0e0; !* Light Theme *!*/
-    background-color: #212121; /* Dark Theme */
 }
 #caption-overlay {
     position: fixed;
