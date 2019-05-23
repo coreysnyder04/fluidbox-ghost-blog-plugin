@@ -33,7 +33,7 @@ window.fluidboxGhost = $.when(
     }
     console.log('theme', theme, backgroundColor);
 
-
+    document.styleSheets[0].addRule('.fluidbox__wrap .fluidbox__overlay', 'background-color: ' + backgroundColor + '!important');
 
     let showCaption = window.fluidboxGhostConfig.showCaption;
 
@@ -63,7 +63,6 @@ window.fluidboxGhost = $.when(
       }
     }).on('openend.fluidbox', function() {
       activeImage = this;
-      $('.fluidbox__wrap .fluidbox__overlay').css({'background-color': backgroundColor});
       if(showCaption){
         let caption = $(this).parents('figure').find('figcaption').html()
         if(caption && caption.length > 0){
