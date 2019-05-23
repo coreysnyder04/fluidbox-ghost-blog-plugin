@@ -33,7 +33,7 @@ window.fluidboxGhost = $.when(
     }
     console.log('theme', theme, backgroundColor);
 
-    $('.fluidbox__wrap .fluidbox__overlay').css('background-color', backgroundColor + ' !important');
+    $('.fluidbox__wrap .fluidbox__overlay').css({'background-color': backgroundColor});
 
     let showCaption = window.fluidboxGhostConfig.showCaption;
 
