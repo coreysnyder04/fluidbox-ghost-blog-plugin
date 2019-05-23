@@ -25,7 +25,7 @@ window.fluidboxGhost = $.when(
     if(theme === 'image-backdrop'){
       backgroundColor = '#212121';
     }else if(theme === 'light'){
-      backgroundColor = 'hsla(0, 0%, 100%, .85);'
+      backgroundColor = 'hsla(0, 0%, 100%, .85)'
     }else if(theme === 'dark'){
       backgroundColor = 'hsla(0, 0%, 15%, 0.85)'
     }else{
