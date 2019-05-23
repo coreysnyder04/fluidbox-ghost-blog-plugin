@@ -63,7 +63,7 @@ window.fluidboxGhost = $.when(
       }
     }).on('openend.fluidbox', function() {
       activeImage = this;
-
+      $('.fluidbox__wrap .fluidbox__overlay').css({'background-color': backgroundColor});
       if(showCaption){
         let caption = $(this).parents('figure').find('figcaption').html()
         if(caption && caption.length > 0){
@@ -78,8 +78,6 @@ window.fluidboxGhost = $.when(
         $('#caption-overlay').removeClass('visible');
       });
 
-
-    $('.fluidbox__wrap .fluidbox__overlay').css({'background-color': backgroundColor});
 
     var scrollPosition = 0;
     $(window).scroll($.throttle(250, function(){
