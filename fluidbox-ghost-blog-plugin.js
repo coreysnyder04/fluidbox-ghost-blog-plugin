@@ -9,10 +9,6 @@ window.fluidboxGhost = $.when(
     $( deferred.resolve );
   })
 ).done(function(){
-
-  console.log('everything is loaded')
-
-  console.log('window.fluidboxGhostConfig', window.fluidboxGhostConfig);
     // Comment out lines depending on what you want to have flexbox triggered on
     let targetImages = window.fluidboxGhostConfig.matchImageSelectors || [
       '.kg-gallery-image img', // Gallery Images
@@ -31,7 +27,6 @@ window.fluidboxGhost = $.when(
     }else{
       backgroundColor = theme;
     }
-    console.log('theme', theme, backgroundColor);
 
     document.styleSheets[0].addRule('.fluidbox__wrap .fluidbox__overlay', 'background-color: ' + backgroundColor + '!important');
 
@@ -111,5 +106,4 @@ window.fluidboxGhost = $.when(
         $(allImages[currentImageIndex]).trigger('click');
       });
     }, 500);
-
 });
