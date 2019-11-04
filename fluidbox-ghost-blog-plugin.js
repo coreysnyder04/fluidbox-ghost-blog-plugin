@@ -79,7 +79,7 @@ window.fluidboxGhost = $.when(
 
       // If has scrolled beyond plus/minus 60 pixels
       if (Math.abs(currentScrollPosition - scrollPosition) > 60)
-        $('a').fluidbox('close');
+        $(activeImage).fluidbox('close');
 
       // Update global scroll position store
       scrollPosition = currentScrollPosition;
