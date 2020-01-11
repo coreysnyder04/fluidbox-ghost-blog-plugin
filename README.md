@@ -16,7 +16,7 @@ Live Demo: You can see this live on my site now: http://coreysnyder.me/test-page
 ## How to use
 Drop this line into your site-footer section in the ghost admin panel
 ```html
-  <script async src="https://cdn.jsdelivr.net/gh/coreysnyder04/fluidbox-ghost-blog-plugin@0.1.0/fluidbox-ghost-blog-plugin.min.js"></script>
+  <script async src="https://cdn.jsdelivr.net/gh/Torqu3Wr3nch/fluidbox-ghost-blog-plugin@0.1.1a/fluidbox-ghost-blog-plugin.min.js"></script>
 ```
 
 ### Customization
