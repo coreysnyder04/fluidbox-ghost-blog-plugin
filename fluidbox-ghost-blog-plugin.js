@@ -41,8 +41,10 @@ window.fluidboxGhost = $.when(
 
     // Finds all of our
     $(targetImages.join(',')).each(function (index, el) {
-      $("<a href='" + $(this).attr('src') + "' class='zoom'></a>").insertAfter($(this));
-      $(this).appendTo($(this).next("a"));
+      if(!$(this).parent().hasClass("kg-bookmark-thumbnail")){
+        $("<a href='" + $(this).attr('src') + "' class='zoom'></a>").insertAfter($(this));
+        $(this).appendTo($(this).next("a"));
+      }
     });
 
     // Initialize Fluidbox
